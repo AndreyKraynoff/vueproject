@@ -5,13 +5,19 @@
 <AddTodo
 @add-todo="addTodo"
 />
+
+<select v-model="filter">
+<option value="all">All</option>
+<option value="completed">Completed</option>
+<option value="not-completed">Not Completed</option>
+</select>
 <hr>
 <TodoList
+v-bind:todos="filteredTodos"
 
-v-bind:todos="todos"
 v-on:remove-todo="removeTodo"
 />
- 
+
 </div>
 </template>
 
@@ -23,7 +29,8 @@ export default {
   name: 'App',
   data(){
   return {
-     todos: []
+     todos: [],
+     filter: 'all'
   }
   },
   mounted(){
@@ -33,6 +40,24 @@ export default {
     this.todos = json
   })
   },
+  computed:{
+    filteredTodos(){
+      if(this.filter === 'all'){
+        return this.todos
+      }
+      if(this.filter === 'completed'){
+        return this.todos.filter(t => t.completed)
+      }
+      if(this.filter === 'not-completed'){
+        return this.todos.filter(t => !t.completed)
+      }
+    }
+  },
+  //watch: {
+  //  filter(value){
+  //    console.log(value)
+  //  }
+  //},
   methods: {
     removeTodo(id){
       console.log(id);
